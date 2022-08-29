@@ -324,6 +324,216 @@ if(isNaN(opcion)){
         break;
         case 7:
             alert('7- Nos piden realizar una agenda telefónica de contactos.\n\nUn contacto está definido por un nombre y un teléfono. Se considera que un contacto es igual a otro cuando sus nombres son iguales.\n\nUna agenda de contactos está formada por un conjunto de contactos. Se podrá crear de dos formas, indicando nosotros el tamaño o con un tamaño por defecto (10).\n\nLos métodos de la agenda serán los siguientes:\n\naniadirContacto(Contacto): Añade un contacto a la agenda, sino la agenda no puede almacenar más contactos indicar por pantalla.\nexisteContacto(Conctacto): indica si el contacto pasado existe o no.\nlistarContactos(): Lista toda la agenda\nbuscarContacto(nombre): busca un contacto por su nombre y muestra su teléfono.\neliminarContacto(Contacto c): elimina el contacto de la agenda, indica si se ha eliminado o no por pantalla\nagendaLlena(): indica si la agenda está llena.\nhuecosLibres(): indica cuántos contactos más podemos ingresar.\n\nCrea un menú con opciones por consola para probar todas estas funcionalidades')
+
+            class Contacto{
+                constructor(nombre,telefono){
+                    this.nombre=nombre
+                    this.telefono=telefono
+                }
+            
+                getNombre(){
+                    return this.nombre
+                }
+            
+                getTelefono(){
+                    return this.telefono
+                }
+            
+                contactoInfo(){
+                    document.write(`Nombre: ${this.nombre}, Telefono: ${this.telefono} <br>`)
+                }
+            
+                contactoInfoConsola(){
+                    return `Nombre: ${this.nombre}, Telefono: ${this.telefono}`
+                }
+            }
+            
+            let agendaContacto
+            let tamañoAgenda
+            
+            //FUNCION AÑADIR CONTACTO
+            const aniadirContacto = () =>{
+                if(agendaContacto.length>=tamañoAgenda){
+                    document.write('Ya no puede almacenar a mas contactos <br>')
+                    console.log('Ya no puede almacenar a mas contactos')
+                }else{
+                    let nombre = prompt(`${agendaContacto.length+1}/${tamañoAgenda}- Ingrese el nombre del contacto`).trim().toLowerCase()
+                    let telefono = parseInt(prompt(`${agendaContacto.length+1}/${tamañoAgenda}- Ingrese el numero telefonico del contacto`))
+                    if(nombre != '' && isNaN(nombre) && !isNaN(telefono)){
+                        agendaContacto.push(new Contacto(nombre, telefono))
+                    }
+                }
+            }
+            
+            //FUNCION LISTAR CONTACTOS
+            const listarContactos = () =>{
+                if(agendaContacto.length<1)
+                {
+                    document.write('No hay contactos a mostrar, intente agendar a 1 persona <br>')
+                    console.log('No hay contactos a mostrar, intente agendar a 1 persona')
+                }else{
+                    for(let personaContacto of agendaContacto){
+                        personaContacto.contactoInfo()
+                        console.log(personaContacto.contactoInfoConsola())
+                    }
+                    document.write('--------------------------------------------------------- <br>')
+                    console.log('------------------------------------------------------')
+                }
+            }
+            
+            // FUNCION BUSCAR CONTACTO POR NOMBRE Y MOSTRAR SU TELEFONO
+            const buscarContacto = () =>{
+                if(agendaContacto.length<1)
+                {
+                    document.write('No hay contactos a mostrar, intente agendar a 1 persona <br>')
+                    console.log('No hay contactos a mostrar, intente agendar a 1 persona')
+                }else{
+                    let nombreXTelefono
+                    do{
+                        nombreXTelefono = prompt('Escriba el nombre de la persona a buscar, para mostrar su numero telefonico')
+                    }while(!isNaN(nombreXTelefono) || nombreXTelefono=='')
+                    let encontrado = false
+                    let obtenerTelefono
+                    for(let tel of agendaContacto){
+                        if(tel.getNombre()==nombreXTelefono){
+                            encontrado=true
+                            obtenerTelefono=tel.getTelefono()
+                        }
+                    }
+                    if(encontrado){
+                        document.write(`${nombreXTelefono} tiene el siguiente numero telefonico: ${obtenerTelefono} <br>`)
+                        console.log(`${nombreXTelefono} tiene el siguiente numero telefonico: ${obtenerTelefono}`)
+                    }else{
+                        document.write(`No pudimos encontrar su numero telefonico porque "${nombreXTelefono}" no existe en sus contactos <br>`)
+                        console.log(`No pudimos encontrar su numero telefonico porque "${nombreXTelefono}" no existe en sus contactos`)
+                    }
+                }
+            }
+            
+            //FUNCION PARA SABER SI EXISTE O NO EL CONTACTO
+            const existeContacto = () =>{
+                if(agendaContacto.length<1)
+                {
+                    document.write('No hay contactos a mostrar, intente agendar a 1 persona <br>')
+                    console.log('No hay contactos a mostrar, intente agendar a 1 persona')
+                }else{
+                    let contactoExiste
+                    do{
+                        contactoExiste = prompt('Escriba el nombre de la persona para saber si existe entre sus contacos')
+                    }while(!isNaN(contactoExiste) || contactoExiste=='')
+                    let encontrado = false
+                    for(const existe of agendaContacto){
+                        if(existe.getNombre()==contactoExiste){
+                            encontrado=true
+                        }
+                    }
+                    if(encontrado){
+                        document.write(`"${contactoExiste}" se encuentra entre sus contactos <br>`)
+                        console.log(`"${contactoExiste}" se encuentra entre sus contactos`)
+                    }else{
+                        document.write(`"${contactoExiste}" no existe entre sus contactos <br>`)
+                        console.log(`"${contactoExiste}" no existe entre sus contactos`)
+                    }
+                }
+            }
+            
+            //FUNCION PARA SABER SI LA AGENDA ESTA LLENA
+            const agendaLlena = () =>{
+                if(agendaContacto.length == tamañoAgenda){
+                    document.write('La agenda se encuentra llena <br>')
+                    console.log('La agenda se encuentra llena')
+                }else{
+                    document.write('La agenda no se encuentra llena <br>')
+                    console.log('La agenda no se encuentra llena')
+                }
+            }
+            
+            //FUNCION PARA SABER SI HAY ESPACIO DISPONIBLE EN LA AGENDA
+            const huecosLibres = () =>{
+                if(agendaContacto.length<tamañoAgenda){
+                    document.write(`Queda(n) ${tamañoAgenda-agendaContacto.length} espacio(s) disponible(s) <br>`)
+                    console.log(`Queda(n) ${tamañoAgenda-agendaContacto.length} espacio(s) disponible(s)`)
+                }else{
+                    document.write('Ya no queda espacio para seguir agendando <br>')
+                    console.log('Ya no queda espacio para seguir agendando')
+                }
+            }
+            
+            //FUNCION PARA ELIMINAR A UN CONTACTO
+            const eliminarContacto = () =>{
+                if(agendaContacto.length<1)
+                {
+                    document.write('No hay contactos para eliminar <br>')
+                    console.log('No hay contactos para eliminar')
+                }else{
+                    let eliminarUsuario
+                    do{
+                        eliminarUsuario = prompt('Escriba el nombre de la persona para eliminarla de sus contactos')
+                    }while(!isNaN(eliminarUsuario) || eliminarUsuario=='')
+                    let encontrado = false
+                    let eliminarPersona
+                    for(const eliminar of agendaContacto){
+                        if(eliminar.getNombre()==eliminarUsuario){
+                            encontrado=true
+                            eliminarPersona=agendaContacto.indexOf(eliminar)
+                            agendaContacto.splice(eliminarPersona,1)
+                        }
+                    }
+                    if(encontrado){
+                        document.write(`"${eliminarUsuario}" ha sido eliminado/a de sus contactos <br>`)
+                        console.log(`"${eliminarUsuario}" ha sido eliminado/a de sus contactos`)
+                    }else{
+                        document.write(`No pudimos eliminar a "${eliminarUsuario}" porque no existe entre sus contactos <br>`)
+                        console.log(`No pudimos eliminar a "${eliminarUsuario}" porque no existe entre sus contactos`)
+                    }
+                }
+            }
+            
+            
+            do{
+                agendaContacto = [] // aqui se guardaran los nombres y telefonos
+                tamañoAgenda = parseInt((prompt('Ingrese el limite de contactos que desee agendar (Ingrese "1" como minimo)')))
+            }while(isNaN(tamañoAgenda) || tamañoAgenda<=0)
+            
+            while(true){
+                let option = prompt('BIENVENIDO/A, INGRESE UNA OPCION\n1- Añadir contacto\n2- Consultar si existe el contacto\n3- Listar toda la agenda\n4- Buscar por nombre y mostrar su numero telefonico\n5- Eliminar contacto\n6- Consultar si la agenda esta llena\n7- Consultar cuantos contactos podemos agregar\nPARA SALIR, HAGA CLIC EN CANCELAR')
+            
+                if(option == null)
+                    break
+                
+                option = parseInt(option)
+                if(isNaN(option)){
+                        document.write('El codigo ingresado no es un numero... <br>')
+                        console.log('El codigo ingresado no es un numero...')
+                }else{
+                    switch(option){
+                        case 1:
+                            aniadirContacto()
+                        break;
+                        case 2:
+                            existeContacto()
+                        break;
+                        case 3:
+                            listarContactos()
+                        break;
+                        case 4:
+                            buscarContacto()
+                        break;
+                        case 5:
+                            eliminarContacto()
+                        break;
+                        case 6:
+                            agendaLlena()
+                        break;
+                        case 7:
+                            huecosLibres()
+                        break;
+                        default:
+                            document.write('Digite un numero entre el 1-7 <br>')
+                            console.log('Digite un numero entre el 1-7')
+                    }
+                }
+            }
         break;
         default: document.write('El valor ingresado no se encuentra en el rango del 1-7')
     }
